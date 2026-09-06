@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>image_search_demo</RootNamespace>
+    <NoWarn>$(NoWarn);OPENAI001</NoWarn>
+    <UserSecretsId>image-search-demo-foundry-chat</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.AI.Extensions.OpenAI" Version="2.0.0" />
+    <PackageReference Include="Azure.AI.Projects" Version="2.0.1" />
+    <PackageReference Include="Azure.AI.Projects.Agents" Version="2.0.0" />
+    <PackageReference Include="Azure.Identity" Version="1.21.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.26.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="4.14.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ImageSearchDemo.Tests\**" />
+    <Content Remove="grounding-samples\**" />
+    <Content Remove="ImageSearchDemo.Tests\**" />
+    <None Remove="grounding-samples\**" />
+    <None Remove="ImageSearchDemo.Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ImageSearchDemo.Tests" />
+  </ItemGroup>
+
+</Project>

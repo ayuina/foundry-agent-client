@@ -1,0 +1,15 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "エラー";
+}
+
+<main class="error-page">
+    <div class="welcome-icon" aria-hidden="true">!</div>
+    <h1>処理を完了できませんでした</h1>
+    <p>しばらく待ってから、もう一度お試しください。</p>
+    @if (Model.ShowRequestId)
+    {
+        <p class="request-id">Request ID: <code>@Model.RequestId</code></p>
+    }
+    <a href="/">チャットへ戻る</a>
+</main>
