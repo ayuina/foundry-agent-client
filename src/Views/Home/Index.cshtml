@@ -1,0 +1,108 @@
+@using System.Security.Claims
+@{
+    ViewData["Title"] = "Foundry Chat";
+    var historyScope = User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
+        ?? User.FindFirstValue(ClaimTypes.NameIdentifier)
+        ?? "authenticated-user";
+}
+
+<div class="app-shell" data-history-scope="@historyScope">
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark" aria-hidden="true">F</span>
+            <div>
+                <h1>Foundry Chat</h1>
+                <p>AI Search grounded assistant</p>
+            </div>
+        </div>
+        <div class="user-menu">
+            <span class="user-name">@User.Identity?.Name</span>
+            <form asp-controller="Home" asp-action="SignOutUser" method="post">
+                <button class="text-button" type="submit">サインアウト</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="workspace">
+        <aside class="settings-panel" id="settings-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="eyebrow">Connection</span>
+                    <h2>エージェント設定</h2>
+                </div>
+                <span class="status-dot" id="connection-indicator" title="未設定"></span>
+            </div>
+
+            <p class="panel-description">サインインユーザーが参照できる Foundry Project を Azure から取得します。Azure 資格情報はブラウザーに保存されません。</p>
+
+            <form id="connection-form" autocomplete="off">
+                <div class="field-label-row">
+                    <label for="resource-name">Foundry リソース</label>
+                    <button class="inline-button" id="refresh-resources" type="button">再読み込み</button>
+                </div>
+                <select id="resource-name" name="resourceName" required disabled>
+                    <option value="">読み込み中...</option>
+                </select>
+
+                <label for="project-name">プロジェクト名</label>
+                <select id="project-name" name="projectName" required disabled>
+                    <option value="">Foundry リソースを選択</option>
+                </select>
+
+                <label for="agent-name">Agent 名</label>
+                <select id="agent-name" name="agentName" required disabled>
+                    <option value="">Project を選択</option>
+                </select>
+
+                <label for="agent-version">Agent Version</label>
+                <select id="agent-version" name="agentVersion" disabled>
+                    <option value="">最新バージョン</option>
+                </select>
+
+                <p class="discovery-status" id="discovery-status" role="status">接続先を読み込んでいます...</p>
+                <button class="primary-button full-width" type="submit" disabled>このエージェントを使用</button>
+            </form>
+
+            <div class="active-agent" id="active-agent" hidden>
+                <span class="active-label">接続先</span>
+                <strong id="active-agent-name"></strong>
+                <span id="active-project-name"></span>
+            </div>
+
+            <button class="secondary-button full-width danger" id="clear-chat" type="button">会話をクリア</button>
+        </aside>
+
+        <section class="chat-panel" aria-label="チャット">
+            <button class="settings-toggle" id="settings-toggle" type="button" aria-controls="settings-panel" aria-expanded="false">
+                接続設定
+            </button>
+
+            <div class="messages" id="messages" aria-live="polite">
+                <div class="welcome" id="welcome">
+                    <div class="welcome-icon" aria-hidden="true">✦</div>
+                    <h2>ドキュメントについて質問してください</h2>
+                    <p>Foundry IQ が検索した情報を、引用元や関連画像と一緒に表示します。</p>
+                    <div class="suggestions">
+                        <button type="button" data-prompt="このドキュメント群の主なテーマを要約してください">主なテーマを要約</button>
+                        <button type="button" data-prompt="重要なポイントを引用元とともに教えてください">重要ポイントと引用元</button>
+                        <button type="button" data-prompt="関連する画像があれば表示してください">関連画像を検索</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="composer-wrap">
+                <div class="connection-warning" id="connection-warning">最初に接続先エージェントを設定してください。</div>
+                <form class="composer" id="chat-form">
+                    @Html.AntiForgeryToken()
+                    <label class="visually-hidden" for="message-input">メッセージ</label>
+                    <textarea id="message-input" rows="1" maxlength="8000"
+                              placeholder="ドキュメントについて質問する..." disabled></textarea>
+                    <button class="send-button" id="send-button" type="submit" disabled aria-label="送信">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20.4 21.85 12 3 3.6v6.53L16.47 12 3 13.87v6.53Z"/></svg>
+                    </button>
+                </form>
+                <p class="disclaimer">AI の回答には誤りが含まれる可能性があります。引用元を確認してください。</p>
+            </div>
+        </section>
+    </main>
+</div>

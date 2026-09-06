@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="image-search-demo.csproj" />
+  <Project Path="ImageSearchDemo.Tests/ImageSearchDemo.Tests.csproj" />
+</Solution>
